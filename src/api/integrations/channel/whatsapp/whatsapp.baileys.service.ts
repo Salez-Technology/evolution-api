@@ -1501,17 +1501,17 @@ export class BaileysStartupService extends ChannelStartupService {
             };
 
             if (this.configService.get<Database>('DATABASE').SAVE_DATA.MESSAGE_UPDATE)
-              // await this.prismaRepository.messageUpdate.create({
-              //   data: message,
-              // });
+              if (this.configService.get<Chatwoot>('CHATWOOT').ENABLED && this.localChatwoot?.enabled) {
+                // await this.prismaRepository.messageUpdate.create({
+                //   data: message,
+                // });
 
-            if (this.configService.get<Chatwoot>('CHATWOOT').ENABLED && this.localChatwoot?.enabled) {
-              this.chatwootService.eventWhatsapp(
-                Events.MESSAGES_DELETE,
-                { instanceName: this.instance.name, instanceId: this.instanceId },
-                { key: key },
-              );
-            }
+                this.chatwootService.eventWhatsapp(
+                  Events.MESSAGES_DELETE,
+                  { instanceName: this.instance.name, instanceId: this.instanceId },
+                  { key: key },
+                );
+              }
 
             continue;
           } else if (update.status !== undefined && status[update.status]) {
@@ -1544,9 +1544,9 @@ export class BaileysStartupService extends ChannelStartupService {
           this.sendDataWebhook(Events.MESSAGES_UPDATE, message);
 
           if (this.configService.get<Database>('DATABASE').SAVE_DATA.MESSAGE_UPDATE)
-            // await this.prismaRepository.messageUpdate.create({
-            //   data: message,
-            // });
+            await this.prismaRepository.messageUpdate.create({
+              data: message,
+            });
 
           const existingChat = await this.prismaRepository.chat.findFirst({
             where: { instanceId: this.instanceId, remoteJid: message.remoteJid },
