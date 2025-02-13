@@ -1473,25 +1473,25 @@ export class BaileysStartupService extends ChannelStartupService {
             }
           }
 
-          const findMessage = await this.prismaRepository.message.findFirst({
-            where: {
-              instanceId: this.instanceId,
-              key: {
-                path: ['id'],
-                equals: key.id,
-              },
-            },
-          });
+          // const findMessage = await this.prismaRepository.message.findFirst({
+          //   where: {
+          //     instanceId: this.instanceId,
+          //     key: {
+          //       path: ['id'],
+          //       equals: key.id,
+          //     },
+          //   },
+          // });
 
-          if (!findMessage) {
-            continue;
-          }
+          // if (!findMessage) {
+          //   continue;
+          // }
 
           if (update.message === null && update.status === undefined) {
             this.sendDataWebhook(Events.MESSAGES_DELETE, key);
 
             const message: any = {
-              messageId: findMessage.id,
+              // messageId: findMessage.id,
               keyId: key.id,
               remoteJid: key.remoteJid,
               fromMe: key.fromMe,
@@ -1501,9 +1501,9 @@ export class BaileysStartupService extends ChannelStartupService {
             };
 
             if (this.configService.get<Database>('DATABASE').SAVE_DATA.MESSAGE_UPDATE)
-              await this.prismaRepository.messageUpdate.create({
-                data: message,
-              });
+              // await this.prismaRepository.messageUpdate.create({
+              //   data: message,
+              // });
 
             if (this.configService.get<Chatwoot>('CHATWOOT').ENABLED && this.localChatwoot?.enabled) {
               this.chatwootService.eventWhatsapp(
@@ -1514,24 +1514,24 @@ export class BaileysStartupService extends ChannelStartupService {
             }
 
             continue;
-          } else if (update.status !== undefined && status[update.status] !== findMessage.status) {
+          } else if (update.status !== undefined && status[update.status]) {
             if (!key.fromMe && key.remoteJid) {
               readChatToUpdate[key.remoteJid] = true;
 
-              if (status[update.status] === status[4]) {
-                this.logger.log(`Update as read ${key.remoteJid} - ${findMessage.messageTimestamp}`);
-                this.updateMessagesReadedByTimestamp(key.remoteJid, findMessage.messageTimestamp);
-              }
+              // if (status[update.status] === status[4]) {
+              //   this.logger.log(`Update as read ${key.remoteJid} - ${findMessage.messageTimestamp}`);
+              //   this.updateMessagesReadedByTimestamp(key.remoteJid, findMessage.messageTimestamp);
+              // }
             }
 
-            await this.prismaRepository.message.update({
-              where: { id: findMessage.id },
-              data: { status: status[update.status] },
-            });
+            // await this.prismaRepository.message.update({
+            //   where: { id: findMessage.id },
+            //   data: { status: status[update.status] },
+            // });
           }
 
           const message: any = {
-            messageId: findMessage.id,
+            // messageId: findMessage.id,
             keyId: key.id,
             remoteJid: key.remoteJid,
             fromMe: key.fromMe,
@@ -1544,9 +1544,9 @@ export class BaileysStartupService extends ChannelStartupService {
           this.sendDataWebhook(Events.MESSAGES_UPDATE, message);
 
           if (this.configService.get<Database>('DATABASE').SAVE_DATA.MESSAGE_UPDATE)
-            await this.prismaRepository.messageUpdate.create({
-              data: message,
-            });
+            // await this.prismaRepository.messageUpdate.create({
+            //   data: message,
+            // });
 
           const existingChat = await this.prismaRepository.chat.findFirst({
             where: { instanceId: this.instanceId, remoteJid: message.remoteJid },
@@ -1934,8 +1934,10 @@ export class BaileysStartupService extends ChannelStartupService {
     const jid = createJid(number);
 
     try {
-      const call = await this.client.offerCall(jid, isVideo);
-      setTimeout(() => this.client.terminateCall(call.id, call.to), callDuration * 1000);
+      // const call = await this.client.offerCall(jid, isVideo);
+      // setTimeout(() => this.client.terminateCall(call.id, call.to), callDuration * 1000);
+
+      const call = '';
 
       return call;
     } catch (error) {
