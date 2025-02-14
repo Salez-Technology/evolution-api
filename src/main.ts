@@ -53,7 +53,7 @@ async function bootstrap() {
     }),
     urlencoded({ extended: true, limit: '136mb' }),
     json({ limit: '136mb' }),
-    compression(),
+    // compression(),
   );
 
   app.set('view engine', 'hbs');
