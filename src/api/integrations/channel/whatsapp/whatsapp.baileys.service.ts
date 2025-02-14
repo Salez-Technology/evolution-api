@@ -1490,15 +1490,15 @@ export class BaileysStartupService extends ChannelStartupService {
           if (update.message === null && update.status === undefined) {
             this.sendDataWebhook(Events.MESSAGES_DELETE, key);
 
-            const message: any = {
-              // messageId: findMessage.id,
-              keyId: key.id,
-              remoteJid: key.remoteJid,
-              fromMe: key.fromMe,
-              participant: key?.remoteJid,
-              status: 'DELETED',
-              instanceId: this.instanceId,
-            };
+            // const message: any = {
+            // messageId: findMessage.id,
+            //   keyId: key.id,
+            //   remoteJid: key.remoteJid,
+            //   fromMe: key.fromMe,
+            //   participant: key?.remoteJid,
+            //   status: 'DELETED',
+            //   instanceId: this.instanceId,
+            // };
 
             if (this.configService.get<Database>('DATABASE').SAVE_DATA.MESSAGE_UPDATE)
               if (this.configService.get<Chatwoot>('CHATWOOT').ENABLED && this.localChatwoot?.enabled) {
@@ -1543,10 +1543,11 @@ export class BaileysStartupService extends ChannelStartupService {
 
           this.sendDataWebhook(Events.MESSAGES_UPDATE, message);
 
-          if (this.configService.get<Database>('DATABASE').SAVE_DATA.MESSAGE_UPDATE)
-            await this.prismaRepository.messageUpdate.create({
-              data: message,
-            });
+          // if (this.configService.get<Database>('DATABASE').SAVE_DATA.MESSAGE_UPDATE) {
+          // }
+          // await this.prismaRepository.messageUpdate.create({
+          //   data: message,
+          // });
 
           const existingChat = await this.prismaRepository.chat.findFirst({
             where: { instanceId: this.instanceId, remoteJid: message.remoteJid },
